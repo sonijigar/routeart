@@ -1,54 +1,64 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
- * Leaflet map with CARTO dark tiles + animated route overlay.
- * Uses vanilla Leaflet (not react-leaflet) for full control.
- *
- * This component dynamically imports Leaflet on the client side
- * because Next.js SSR doesn't have `window`.
+ * MapLibre GL map with CARTO dark tiles + animated route overlay.
+ * Replaces Leaflet for better Next.js compatibility and WebGL rendering.
  */
 export default function RouteMap({ route, loading }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
-  const layersRef = useRef([]);
   const [ready, setReady] = useState(false);
 
   // Init map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    // Dynamic import to avoid SSR issues
-    import("leaflet").then((L) => {
-      // Fix Leaflet default icon paths in Next.js
-      delete L.Icon.Default.prototype._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+    import("maplibre-gl").then((maplibregl) => {
+      const map = new maplibregl.Map({
+        container: containerRef.current,
+        style: {
+          version: 8,
+          sources: {
+            carto: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+                "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+                "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+                "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+              ],
+              tileSize: 256,
+              attribution:
+                '&copy; <a href="https://openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+            },
+          },
+          layers: [
+            {
+              id: "carto-tiles",
+              type: "raster",
+              source: "carto",
+              minzoom: 0,
+              maxzoom: 19,
+            },
+          ],
+        },
+        center: [-122.335, 47.627], // MapLibre uses [lng, lat]
+        zoom: 13,
+        attributionControl: true,
       });
 
-      const map = L.map(containerRef.current, {
-        zoomControl: false,
-        attributionControl: true,
-      }).setView([47.627, -122.335], 14);
+      map.addControl(
+        new maplibregl.NavigationControl({ showCompass: false }),
+        "bottom-right"
+      );
 
-      // CARTO dark tiles — these load fine outside the sandbox
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-          attribution: '&copy; <a href="https://openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 19,
-        }
-      ).addTo(map);
-
-      L.control.zoom({ position: "bottomright" }).addTo(map);
-
-      mapRef.current = map;
-      window._L = L; // Store for route updates
-      setReady(true);
+      map.on("load", () => {
+        mapRef.current = map;
+        setReady(true);
+      });
     });
 
     return () => {
@@ -61,92 +71,116 @@ export default function RouteMap({ route, loading }) {
 
   // Update route on map
   useEffect(() => {
-    if (!ready || !mapRef.current || !window._L) return;
+    if (!ready || !mapRef.current) return;
     const map = mapRef.current;
-    const L = window._L;
 
-    // Clear old layers
-    layersRef.current.forEach((layer) => map.removeLayer(layer));
-    layersRef.current = [];
+    // Clear old route layers and sources
+    ["route-glow", "route-mid", "route-line"].forEach((id) => {
+      if (map.getLayer(id)) map.removeLayer(id);
+    });
+    if (map.getSource("route")) map.removeSource("route");
+
+    // Clear old markers
+    if (map._routeMarkers) {
+      map._routeMarkers.forEach((m) => m.remove());
+    }
+    map._routeMarkers = [];
 
     if (!route) return;
 
-    const coords = route.coords.map(([lat, lng]) => [lat, lng]);
+    // MapLibre uses [lng, lat] — our data is [lat, lng]
+    const coords = route.coords.map(([lat, lng]) => [lng, lat]);
 
-    // Ensure map knows its container size, then fit bounds
-    map.invalidateSize();
-    const bounds = L.latLngBounds(coords);
-    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+    // Add route source
+    map.addSource("route", {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        geometry: { type: "LineString", coordinates: coords },
+      },
+    });
 
-    // Glow layer (wide, semi-transparent)
-    const glow = L.polyline(coords, {
-      color: "#ff6b2b",
-      weight: 14,
-      opacity: 0.1,
-      smoothFactor: 1.2,
-      lineCap: "round",
-      lineJoin: "round",
-    }).addTo(map);
-    layersRef.current.push(glow);
+    // Outer glow layer
+    map.addLayer({
+      id: "route-glow",
+      type: "line",
+      source: "route",
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: {
+        "line-color": "#ff6b2b",
+        "line-width": 14,
+        "line-opacity": 0.1,
+      },
+    });
 
-    // Mid glow
-    const midGlow = L.polyline(coords, {
-      color: "#ff6b2b",
-      weight: 7,
-      opacity: 0.2,
-      smoothFactor: 1.2,
-      lineCap: "round",
-      lineJoin: "round",
-    }).addTo(map);
-    layersRef.current.push(midGlow);
+    // Mid glow layer
+    map.addLayer({
+      id: "route-mid",
+      type: "line",
+      source: "route",
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: {
+        "line-color": "#ff6b2b",
+        "line-width": 7,
+        "line-opacity": 0.2,
+      },
+    });
 
     // Main route line
-    const line = L.polyline(coords, {
-      color: "#ff6b2b",
-      weight: 3.5,
-      opacity: 0.95,
-      smoothFactor: 1.2,
-      lineCap: "round",
-      lineJoin: "round",
-    }).addTo(map);
-    layersRef.current.push(line);
+    map.addLayer({
+      id: "route-line",
+      type: "line",
+      source: "route",
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: {
+        "line-color": "#ff6b2b",
+        "line-width": 3.5,
+        "line-opacity": 0.95,
+      },
+    });
 
-    // Start marker (green)
-    const startIcon = L.divIcon({
-      className: "",
-      html: `
-        <div style="position:relative;width:28px;height:28px">
-          <div style="position:absolute;inset:0;border-radius:50%;background:rgba(34,197,94,0.2);animation:pulse-ring 2s ease-in-out infinite"></div>
-          <div style="position:absolute;top:6px;left:6px;width:16px;height:16px;border-radius:50%;background:#22c55e;border:2.5px solid #fff;box-shadow:0 0 12px rgba(34,197,94,0.5)"></div>
-        </div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
-    });
-    const startMarker = L.marker(coords[0], { icon: startIcon }).addTo(map);
-    startMarker.bindTooltip(`<b>START</b><br/>${route.start}`, {
-      permanent: false,
-      className: "route-tooltip",
-      direction: "right",
-      offset: [12, 0],
-    });
-    layersRef.current.push(startMarker);
+    // Fit bounds to route
+    const lngs = coords.map((c) => c[0]);
+    const lats = coords.map((c) => c[1]);
+    map.fitBounds(
+      [
+        [Math.min(...lngs), Math.min(...lats)],
+        [Math.max(...lngs), Math.max(...lats)],
+      ],
+      { padding: 50, maxZoom: 15 }
+    );
 
-    // End marker (red) — only if different from start
-    const end = coords[coords.length - 1];
-    const endIcon = L.divIcon({
-      className: "",
-      html: `<div style="width:16px;height:16px;border-radius:50%;background:#ef4444;border:2.5px solid #fff;box-shadow:0 0 12px rgba(239,68,68,0.5)"></div>`,
-      iconSize: [16, 16],
-      iconAnchor: [8, 8],
+    // Start marker (green pulsing dot)
+    const startEl = document.createElement("div");
+    startEl.innerHTML = `
+      <div style="position:relative;width:28px;height:28px">
+        <div style="position:absolute;inset:0;border-radius:50%;background:rgba(34,197,94,0.2);animation:pulse-ring 2s ease-in-out infinite"></div>
+        <div style="position:absolute;top:6px;left:6px;width:16px;height:16px;border-radius:50%;background:#22c55e;border:2.5px solid #fff;box-shadow:0 0 12px rgba(34,197,94,0.5)"></div>
+      </div>`;
+
+    import("maplibre-gl").then((maplibregl) => {
+      const startMarker = new maplibregl.Marker({ element: startEl })
+        .setLngLat(coords[0])
+        .setPopup(
+          new maplibregl.Popup({ offset: 12 }).setHTML(
+            `<b>START</b><br/>${route.start}`
+          )
+        )
+        .addTo(map);
+      map._routeMarkers.push(startMarker);
+
+      // End marker (red dot)
+      const endEl = document.createElement("div");
+      endEl.innerHTML = `<div style="width:16px;height:16px;border-radius:50%;background:#ef4444;border:2.5px solid #fff;box-shadow:0 0 12px rgba(239,68,68,0.5)"></div>`;
+
+      const endMarker = new maplibregl.Marker({ element: endEl })
+        .setLngLat(coords[coords.length - 1])
+        .setPopup(
+          new maplibregl.Popup({ offset: 12 }).setHTML(`<b>FINISH</b>`)
+        )
+        .addTo(map);
+      map._routeMarkers.push(endMarker);
     });
-    const endMarker = L.marker(end, { icon: endIcon }).addTo(map);
-    endMarker.bindTooltip("<b>FINISH</b>", {
-      permanent: false,
-      className: "route-tooltip",
-      direction: "right",
-      offset: [12, 0],
-    });
-    layersRef.current.push(endMarker);
   }, [route, ready]);
 
   return (
