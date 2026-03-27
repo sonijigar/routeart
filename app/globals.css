@@ -9,22 +9,36 @@ body {
   color: #fff;
 }
 
-/* Dark theme Leaflet overrides */
-.leaflet-container {
+/* Dark theme MapLibre overrides */
+.maplibregl-map {
   background: #0d1117 !important;
 }
-.leaflet-control-zoom a {
+.maplibregl-ctrl button {
   background: rgba(20, 20, 20, 0.9) !important;
   color: #fff !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
-.leaflet-control-attribution {
+.maplibregl-ctrl button .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+.maplibregl-ctrl-attrib {
   background: rgba(0, 0, 0, 0.6) !important;
   color: rgba(255, 255, 255, 0.4) !important;
   font-size: 9px !important;
 }
-.leaflet-control-attribution a {
+.maplibregl-ctrl-attrib a {
   color: rgba(255, 255, 255, 0.5) !important;
+}
+.maplibregl-popup-content {
+  background: #1a1a1a !important;
+  color: #fff !important;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.maplibregl-popup-tip {
+  border-top-color: #1a1a1a !important;
 }
 
 /* Route animation */
