@@ -56,7 +56,7 @@ export default function Home() {
             R
           </div>
           <div>
-            <div className="text-[15px] font-bold">RouteArt</div>
+            <div className="text-[15px] font-bold">RouteArt <span className="text-[10px] text-white/25 font-mono font-normal">v0.1.0</span></div>
             <div className="text-[9px] text-white/25 font-mono tracking-widest">
               SEATTLE · SOUTH LAKE UNION
             </div>
