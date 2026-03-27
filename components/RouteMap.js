@@ -73,7 +73,8 @@ export default function RouteMap({ route, loading }) {
 
     const coords = route.coords.map(([lat, lng]) => [lat, lng]);
 
-    // Fit bounds with padding
+    // Ensure map knows its container size, then fit bounds
+    map.invalidateSize();
     const bounds = L.latLngBounds(coords);
     map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
 
