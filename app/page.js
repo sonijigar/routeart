@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Directions from "../components/Directions";
 import { ROUTES } from "../lib/routes";
 import { downloadGPX } from "../lib/gpx";
+import { fetchRoutedPath, formatDist, formatTime } from "../lib/osrm";
 
 // Dynamic import to avoid SSR issues with Leaflet
 const RouteMap = dynamic(() => import("../components/RouteMap"), {
@@ -28,10 +29,22 @@ export default function Home() {
       setSel(key);
       setRoute(null);
 
-      // Simulate AI processing time
-      await new Promise((r) => setTimeout(r, 1200));
+      const baseRoute = ROUTES[key];
 
-      setRoute(ROUTES[key]);
+      try {
+        // Snap control points to real walkable roads via OSRM
+        const { coords, dist } = await fetchRoutedPath(key, baseRoute.coords);
+        setRoute({
+          ...baseRoute,
+          coords,
+          dist: formatDist(dist),
+          time: formatTime(dist),
+        });
+      } catch {
+        // Fallback: use original straight-line coords
+        setRoute(baseRoute);
+      }
+
       setLoading(false);
     },
     [loading]
