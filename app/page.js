@@ -63,7 +63,7 @@ export default function Home() {
           </div>
         </div>
         <div className="text-xs text-white/20 font-mono">
-          🏃 Running · 3–5 mi
+          🏃 Running · 2–3 mi
         </div>
       </header>
 
