@@ -2,12 +2,10 @@
 
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import Directions from "../components/Directions";
-import { ROUTES } from "../lib/routes";
+import { SHAPES, sampleShape } from "../lib/shapes";
+import { fetchRoutedShape, formatDist, formatTime } from "../lib/osrm";
 import { downloadGPX } from "../lib/gpx";
-import { fetchRoutedPath, formatDist, formatTime } from "../lib/osrm";
 
-// Dynamic import to avoid SSR issues with Leaflet
 const RouteMap = dynamic(() => import("../components/RouteMap"), {
   ssr: false,
   loading: () => (
@@ -29,20 +27,47 @@ export default function Home() {
       setSel(key);
       setRoute(null);
 
-      const baseRoute = ROUTES[key];
+      const shape = SHAPES[key];
 
       try {
-        // Snap control points to real walkable roads via OSRM
-        const { coords, dist } = await fetchRoutedPath(key, baseRoute.coords);
+        // 1. Sample the parametric curve into GPS points
+        const shapePoints = sampleShape(
+          key,
+          shape.center,
+          shape.radius,
+          shape.numPoints
+        );
+
+        // 2. Snap to roads + route through all points via OSRM
+        const { coords, dist } = await fetchRoutedShape(key, shapePoints);
+
         setRoute({
-          ...baseRoute,
+          name: shape.name,
           coords,
           dist: formatDist(dist),
           time: formatTime(dist),
+          start: "South Lake Union",
+          startCoord: coords[0],
+          turns: [], // no hardcoded turns — route is generated
         });
-      } catch {
-        // Fallback: use original straight-line coords
-        setRoute(baseRoute);
+      } catch (err) {
+        console.error("Route generation failed:", err);
+        // Fallback: show the raw shape points
+        const shapePoints = sampleShape(
+          key,
+          shape.center,
+          shape.radius,
+          shape.numPoints
+        );
+        setRoute({
+          name: shape.name,
+          coords: shapePoints,
+          dist: "~2 mi",
+          time: "~20 min",
+          start: "South Lake Union",
+          startCoord: shapePoints[0],
+          turns: [],
+        });
       }
 
       setLoading(false);
@@ -69,15 +94,18 @@ export default function Home() {
             R
           </div>
           <div>
-            <div className="text-[15px] font-bold">RouteArt <span className="text-[10px] text-white/25 font-mono font-normal">v0.1.0</span></div>
+            <div className="text-[15px] font-bold">
+              RouteArt{" "}
+              <span className="text-[10px] text-white/25 font-mono font-normal">
+                v0.2.0
+              </span>
+            </div>
             <div className="text-[9px] text-white/25 font-mono tracking-widest">
               SEATTLE · SOUTH LAKE UNION
             </div>
           </div>
         </div>
-        <div className="text-xs text-white/20 font-mono">
-          🏃 Running · 2–3 mi
-        </div>
+        <div className="text-xs text-white/20 font-mono">🏃 Running</div>
       </header>
 
       {/* Content */}
@@ -100,10 +128,7 @@ export default function Home() {
         <div className="mt-4 flex flex-col gap-3">
           {/* Shape buttons */}
           <div className="flex gap-2">
-            {[
-              ["heart", "Heart ♥"],
-              ["lightning", "Lightning ⚡"],
-            ].map(([key, label]) => (
+            {Object.entries(SHAPES).map(([key, shape]) => (
               <button
                 key={key}
                 onClick={() => generate(key)}
@@ -114,7 +139,7 @@ export default function Home() {
                     : "border border-white/[0.07] bg-white/[0.02] text-white/50 hover:border-accent/30 hover:text-white/70"
                 } ${loading ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
               >
-                {label}
+                {shape.name} {shape.icon}
               </button>
             ))}
           </div>
@@ -140,11 +165,10 @@ export default function Home() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {[
                   ["Distance", route.dist],
                   ["Est. time", route.time],
-                  ["Turns", `${route.turns.length}`],
                 ].map(([label, value]) => (
                   <div
                     key={label}
@@ -159,9 +183,6 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-
-              {/* Directions */}
-              <Directions route={route} />
 
               {/* Export buttons */}
               <div className="flex gap-2">
