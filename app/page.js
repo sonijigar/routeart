@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { SHAPES, sampleShape } from "../lib/shapes";
-import { fetchRoutedShape, formatDist, formatTime } from "../lib/osrm";
+import { discoverShapes, formatDist, formatTime } from "../lib/discovery";
 import { downloadGPX } from "../lib/gpx";
 
 const RouteMap = dynamic(() => import("../components/RouteMap"), {
@@ -15,65 +14,97 @@ const RouteMap = dynamic(() => import("../components/RouteMap"), {
   ),
 });
 
+// Seattle neighborhoods with tight grids
+const LOCATIONS = {
+  slu: {
+    name: "South Lake Union",
+    center: [47.6225, -122.3360],
+  },
+  capitolhill: {
+    name: "Capitol Hill",
+    center: [47.6250, -122.3220],
+  },
+};
+
 export default function Home() {
-  const [sel, setSel] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [route, setRoute] = useState(null);
+  const [location, setLocation] = useState("slu");
+  const [candidates, setCandidates] = useState([]);
+  const [selectedIdx, setSelectedIdx] = useState(null);
+  const [phase, setPhase] = useState("idle"); // idle | fetching | building | fitting | done | error
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  const generate = useCallback(
-    async (key) => {
-      if (loading) return;
-      setLoading(true);
-      setSel(key);
-      setRoute(null);
+  const discover = useCallback(
+    async (locKey) => {
+      if (phase === "fetching" || phase === "building" || phase === "fitting") return;
 
-      const shape = SHAPES[key];
+      setPhase("fetching");
+      setCandidates([]);
+      setSelectedIdx(null);
+      setErrorMsg(null);
+      setLocation(locKey);
+
+      const loc = LOCATIONS[locKey];
 
       try {
-        // 1. Sample the parametric curve into GPS points
-        const shapePoints = sampleShape(
-          key,
-          shape.center,
-          shape.radius,
-          shape.numPoints
-        );
-
-        // 2. Snap to roads + route through all points via OSRM
-        const { coords, dist } = await fetchRoutedShape(key, shapePoints);
-
-        setRoute({
-          name: shape.name,
-          coords,
-          dist: formatDist(dist),
-          time: formatTime(dist),
-          start: "South Lake Union",
-          startCoord: coords[0],
-          turns: [], // no hardcoded turns — route is generated
+        const results = await discoverShapes(loc.center, {
+          radiusKm: 1.0,
+          maxResults: 5,
+          onProgress: (p) => setPhase(p),
         });
+
+        if (results.length === 0) {
+          setPhase("error");
+          setErrorMsg("No shapes found for this area. Try a different location.");
+          return;
+        }
+
+        setCandidates(results);
+        setSelectedIdx(0); // auto-select best match
+        setPhase("done");
       } catch (err) {
-        console.error("Route generation failed:", err);
-        // Fallback: show the raw shape points
-        const shapePoints = sampleShape(
-          key,
-          shape.center,
-          shape.radius,
-          shape.numPoints
-        );
-        setRoute({
-          name: shape.name,
-          coords: shapePoints,
-          dist: "~2 mi",
-          time: "~20 min",
-          start: "South Lake Union",
-          startCoord: shapePoints[0],
-          turns: [],
-        });
+        console.error("Discovery failed:", err);
+        setPhase("error");
+        setErrorMsg(err.message || "Failed to discover shapes");
       }
-
-      setLoading(false);
     },
-    [loading]
+    [phase]
   );
+
+  // Auto-discover on first load
+  useEffect(() => {
+    discover("slu");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const isLoading = phase === "fetching" || phase === "building" || phase === "fitting";
+  const selectedCandidate = selectedIdx !== null ? candidates[selectedIdx] : null;
+
+  // Build route object for the selected candidate (matches existing data contract)
+  const route = selectedCandidate
+    ? {
+        name: selectedCandidate.name,
+        coords: selectedCandidate.coords,
+        dist: formatDist(selectedCandidate.distance),
+        time: formatTime(selectedCandidate.distance),
+        start: LOCATIONS[location].name,
+        startCoord: selectedCandidate.coords[0],
+        turns: [],
+      }
+    : null;
+
+  // Build preview routes for unselected candidates
+  const previewRoutes = candidates
+    .filter((_, i) => i !== selectedIdx)
+    .map((c) => c.coords);
+
+  const phaseLabel = {
+    idle: "",
+    fetching: "Fetching roads...",
+    building: "Building graph...",
+    fitting: "Finding shapes...",
+    done: "",
+    error: "",
+  };
 
   return (
     <div className="min-h-screen bg-dark-900">
@@ -97,11 +128,11 @@ export default function Home() {
             <div className="text-[15px] font-bold">
               RouteArt{" "}
               <span className="text-[10px] text-white/25 font-mono font-normal">
-                v0.2.0
+                v0.3.0
               </span>
             </div>
             <div className="text-[9px] text-white/25 font-mono tracking-widest">
-              SEATTLE · SOUTH LAKE UNION
+              SEATTLE
             </div>
           </div>
         </div>
@@ -111,38 +142,80 @@ export default function Home() {
       {/* Content */}
       <main className="relative z-10 px-4 py-3 pb-8">
         {/* Map */}
-        <RouteMap route={route} loading={loading} />
+        <RouteMap route={route} loading={isLoading} previewRoutes={previewRoutes} />
 
-        {/* Route badge */}
-        {route && (
+        {/* Loading status */}
+        {isLoading && (
           <div className="relative z-20 -mt-9 ml-3 mb-2 inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-dark-900/95 border border-accent/30">
-            <span className="text-accent font-semibold text-sm">
-              &ldquo;{route.name}&rdquo;
-            </span>
-            <span className="text-white/35 text-xs font-mono">
-              {route.dist}
+            <span className="text-accent text-sm animate-pulse">
+              {phaseLabel[phase]}
             </span>
           </div>
         )}
 
+        {/* Route badge */}
+        {route && !isLoading && (
+          <div className="relative z-20 -mt-9 ml-3 mb-2 inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-dark-900/95 border border-accent/30">
+            <span className="text-accent font-semibold text-sm">
+              {selectedCandidate.icon} &ldquo;{route.name}&rdquo;
+            </span>
+            <span className="text-white/35 text-xs font-mono">
+              {route.dist}
+            </span>
+            <span className="text-white/20 text-[10px] font-mono">
+              score: {selectedCandidate.score.toFixed(2)}
+            </span>
+          </div>
+        )}
+
+        {/* Error message */}
+        {phase === "error" && (
+          <div className="mt-3 px-4 py-3 rounded-xl bg-red-500/[0.06] border border-red-500/15 text-sm text-red-400">
+            {errorMsg}
+          </div>
+        )}
+
         <div className="mt-4 flex flex-col gap-3">
-          {/* Shape buttons */}
+          {/* Location selector */}
           <div className="flex gap-2">
-            {Object.entries(SHAPES).map(([key, shape]) => (
+            {Object.entries(LOCATIONS).map(([key, loc]) => (
               <button
                 key={key}
-                onClick={() => generate(key)}
-                disabled={loading}
-                className={`flex-1 py-3.5 rounded-xl text-[15px] font-semibold transition-all ${
-                  sel === key
-                    ? "border-2 border-accent bg-accent/10 text-accent"
-                    : "border border-white/[0.07] bg-white/[0.02] text-white/50 hover:border-accent/30 hover:text-white/70"
-                } ${loading ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
+                onClick={() => discover(key)}
+                disabled={isLoading}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  location === key
+                    ? "border-2 border-white/20 bg-white/[0.05] text-white/70"
+                    : "border border-white/[0.07] bg-white/[0.02] text-white/30 hover:border-white/15 hover:text-white/50"
+                } ${isLoading ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
               >
-                {shape.name} {shape.icon}
+                📍 {loc.name}
               </button>
             ))}
           </div>
+
+          {/* Shape candidates */}
+          {candidates.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {candidates.map((c, i) => (
+                <button
+                  key={`${c.shape}-${i}`}
+                  onClick={() => setSelectedIdx(i)}
+                  className={`shrink-0 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                    selectedIdx === i
+                      ? "border-2 border-accent bg-accent/10 text-accent"
+                      : "border border-white/[0.07] bg-white/[0.02] text-white/40 hover:border-accent/30 hover:text-white/60"
+                  }`}
+                >
+                  <div className="text-lg">{c.icon}</div>
+                  <div className="text-[11px] mt-0.5">{c.name}</div>
+                  <div className="text-[9px] text-white/20 font-mono mt-0.5">
+                    {formatDist(c.distance)}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
 
           {route && (
             <>

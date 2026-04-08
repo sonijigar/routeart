@@ -7,7 +7,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
  * MapLibre GL map with CARTO dark tiles + animated route overlay.
  * Replaces Leaflet for better Next.js compatibility and WebGL rendering.
  */
-export default function RouteMap({ route, loading }) {
+export default function RouteMap({ route, loading, previewRoutes = [] }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -183,6 +183,45 @@ export default function RouteMap({ route, loading }) {
     });
   }, [route, ready]);
 
+  // Update preview routes (unselected candidates shown as faint lines)
+  useEffect(() => {
+    if (!ready || !mapRef.current) return;
+    const map = mapRef.current;
+
+    // Clear old preview layers
+    for (let i = 0; i < 10; i++) {
+      const id = `preview-${i}`;
+      if (map.getLayer(id)) map.removeLayer(id);
+      if (map.getSource(id)) map.removeSource(id);
+    }
+
+    previewRoutes.forEach((coords, i) => {
+      if (!coords || coords.length < 2) return;
+      const id = `preview-${i}`;
+      const lngLat = coords.map(([lat, lng]) => [lng, lat]);
+
+      map.addSource(id, {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: { type: "LineString", coordinates: lngLat },
+        },
+      });
+
+      map.addLayer({
+        id,
+        type: "line",
+        source: id,
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": "#ff6b2b",
+          "line-width": 2,
+          "line-opacity": 0.15,
+        },
+      });
+    });
+  }, [previewRoutes, ready]);
+
   return (
     <div className="relative rounded-xl overflow-hidden border border-white/5">
       <div
@@ -195,8 +234,8 @@ export default function RouteMap({ route, loading }) {
       {loading && (
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center z-[1000]">
           <div className="w-9 h-9 border-[3px] border-accent/20 border-t-accent rounded-full mb-3 animate-spin" />
-          <div className="text-accent text-sm font-mono">Snapping to SLU streets...</div>
-          <div className="text-white/25 text-xs font-mono mt-1">Finding optimal route</div>
+          <div className="text-accent text-sm font-mono">Discovering shapes...</div>
+          <div className="text-white/25 text-xs font-mono mt-1">Analyzing road network</div>
         </div>
       )}
 
@@ -204,8 +243,8 @@ export default function RouteMap({ route, loading }) {
       {!route && !loading && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
-            <div className="text-white/15 text-base font-mono">Seattle · South Lake Union</div>
-            <div className="text-white/7 text-xs font-mono mt-2">Choose a shape below to generate a route</div>
+            <div className="text-white/15 text-base font-mono">Seattle</div>
+            <div className="text-white/7 text-xs font-mono mt-2">Discovering shapes for your area...</div>
           </div>
         </div>
       )}
