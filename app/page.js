@@ -14,7 +14,7 @@ const RouteMap = dynamic(() => import("../components/RouteMap"), {
   ),
 });
 
-// Seattle neighborhoods with tight grids
+// Seattle neighborhoods with tight grids — good for GPS art
 const LOCATIONS = {
   slu: {
     name: "South Lake Union",
@@ -23,6 +23,14 @@ const LOCATIONS = {
   capitolhill: {
     name: "Capitol Hill",
     center: [47.6250, -122.3220],
+  },
+  ballard: {
+    name: "Ballard",
+    center: [47.6685, -122.3850],
+  },
+  fremont: {
+    name: "Fremont",
+    center: [47.6510, -122.3500],
   },
 };
 
@@ -47,8 +55,8 @@ export default function Home() {
 
       try {
         const results = await discoverShapes(loc.center, {
-          radiusKm: 1.0,
-          maxResults: 5,
+          radiusKm: 2.5,
+          maxResults: 7,
           onProgress: (p) => setPhase(p),
         });
 
@@ -128,7 +136,7 @@ export default function Home() {
             <div className="text-[15px] font-bold">
               RouteArt{" "}
               <span className="text-[10px] text-white/25 font-mono font-normal">
-                v0.3.0
+                v0.4.0
               </span>
             </div>
             <div className="text-[9px] text-white/25 font-mono tracking-widest">
@@ -177,19 +185,19 @@ export default function Home() {
 
         <div className="mt-4 flex flex-col gap-3">
           {/* Location selector */}
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {Object.entries(LOCATIONS).map(([key, loc]) => (
               <button
                 key={key}
                 onClick={() => discover(key)}
                 disabled={isLoading}
-                className={`flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   location === key
                     ? "border-2 border-white/20 bg-white/[0.05] text-white/70"
                     : "border border-white/[0.07] bg-white/[0.02] text-white/30 hover:border-white/15 hover:text-white/50"
                 } ${isLoading ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
               >
-                📍 {loc.name}
+                {loc.name}
               </button>
             ))}
           </div>

@@ -46,7 +46,7 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
           ],
         },
         center: [-122.335, 47.627], // MapLibre uses [lng, lat]
-        zoom: 13,
+        zoom: 12,
         attributionControl: true,
       });
 
