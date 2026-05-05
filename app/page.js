@@ -171,7 +171,9 @@ export default function Home() {
               {route.dist}
             </span>
             <span className="text-white/20 text-[10px] font-mono">
-              score: {selectedCandidate.score.toFixed(2)}
+              {selectedCandidate.metrics
+                ? `cov:${(selectedCandidate.metrics.coverage * 100).toFixed(0)}% score:${selectedCandidate.score.toFixed(2)}`
+                : `score:${selectedCandidate.score.toFixed(2)}`}
             </span>
           </div>
         )}
