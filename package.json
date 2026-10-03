@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "fetch-fixtures": "node scripts/fetch-fixtures.mjs",
+    "eval": "node scripts/eval.mjs"
   },
   "dependencies": {
     "maplibre-gl": "^4.7.1",

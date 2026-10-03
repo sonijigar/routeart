@@ -16,6 +16,17 @@ npm run dev   # http://localhost:3000
 3. **Fitting** — shape templates (`lib/shapeLibrary.js`) are overlaid at several positions, sizes and rotations, routed through the graph, and scored (`lib/shapeFitter.js`, `lib/shapeScorer.js`).
 4. **Discovery** — the best candidate per shape is returned to the UI (`lib/discovery.js`), drawn on a MapLibre map (`components/RouteMap.js`) and exportable as GPX (`lib/gpx.js`).
 
+## Evaluating shape quality
+
+```bash
+npm run fetch-fixtures   # once: saves Seattle road data to fixtures/osm/ (commit it)
+npm run eval -- --png    # fits every shape, writes eval/out/{report.json,sheet.html,sheet.png}
+```
+
+`npm run eval` always includes a synthetic perfect 100 m grid, the best case: if a shape fails
+there, the algorithm is at fault. Options: `--locations=grid,slu`, `--shapes=pixel-heart,star`,
+`--activity=run|walk|ride`, `--verbose`.
+
 ## Project Structure
 
 ```
@@ -26,14 +37,20 @@ routeart/
 │   └── page.js              # Location picker, shape candidates, GPX export
 ├── components/
 │   └── RouteMap.js          # MapLibre map with route + preview overlays
-└── lib/
-    ├── overpass.js          # OSM road fetch + cache
-    ├── graph.js             # Road graph, spatial index, Dijkstra, grid angle
-    ├── shapeLibrary.js      # Shape templates
-    ├── shapeFitter.js       # Template fitting
-    ├── shapeScorer.js       # Quality metrics + reject gate
-    ├── discovery.js         # Orchestrator
-    └── gpx.js               # GPX generation + download
+├── lib/
+│   ├── overpass.js          # OSM road fetch + cache
+│   ├── roadFilter.js        # Which roads each activity (run/walk/ride) may use
+│   ├── locations.js         # Seattle neighborhoods
+│   ├── graph.js             # Road graph, spatial index, Dijkstra, grid angle
+│   ├── shapeLibrary.js      # Shape templates
+│   ├── shapeFitter.js       # Template fitting
+│   ├── shapeScorer.js       # Quality metrics + reject gate
+│   ├── discovery.js         # Orchestrator
+│   └── gpx.js               # GPX generation + download
+└── scripts/
+    ├── fetch-fixtures.mjs   # Save Seattle road data for evals
+    ├── fixtures.mjs         # Fixture format + synthetic grid
+    └── eval.mjs             # Shape-quality eval harness
 ```
 
 ## Product goal
