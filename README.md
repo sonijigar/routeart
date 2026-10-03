@@ -1,75 +1,51 @@
-# RouteArt — AI-Powered Strava Art
+# RouteArt — GPS art routes for Seattle
 
-Generate GPS art routes on real streets. Seattle SLU proof of concept.
+Suggests runnable/walkable/rideable routes that draw recognizable shapes on real Seattle streets.
 
 ## Quick Start
 
 ```bash
-# Install dependencies
 npm install
-
-# Run dev server
-npm run dev
-
-# Open http://localhost:3000
+npm run dev   # http://localhost:3000
 ```
 
-That's it. The map loads CARTO dark tiles — real streets, real map.
-Click "Heart" or "Lightning" to see routes on real SLU streets.
-Click "Export GPX" to download a file you can load on any GPS device.
+## How it works
 
-## What This Includes
-
-- **Real map** — CARTO dark tiles via Leaflet (actual street-level detail)
-- **Real routes** — Following actual SLU streets (Dexter, Mercer, Westlake, Fairview, etc.)
-- **Turn-by-turn directions** — Every turn listed with street names
-- **GPX export** — Downloads a real GPX file you can import into Strava, Garmin, Apple Watch
-- **Start point** — Links to Google Maps for navigation to the starting intersection
+1. **Road data** — walkable ways for the selected area are fetched from the OpenStreetMap Overpass API (`lib/overpass.js`).
+2. **Graph** — intersections become nodes and street segments become edges; Dijkstra routes between them (`lib/graph.js`).
+3. **Fitting** — shape templates (`lib/shapeLibrary.js`) are overlaid at several positions, sizes and rotations, routed through the graph, and scored (`lib/shapeFitter.js`, `lib/shapeScorer.js`).
+4. **Discovery** — the best candidate per shape is returned to the UI (`lib/discovery.js`), drawn on a MapLibre map (`components/RouteMap.js`) and exportable as GPX (`lib/gpx.js`).
 
 ## Project Structure
 
 ```
 routeart/
 ├── app/
-│   ├── globals.css          # Tailwind + Leaflet dark theme
-│   ├── layout.js            # Root layout
-│   └── page.js              # Main page (assembles everything)
+│   ├── globals.css
+│   ├── layout.js
+│   └── page.js              # Location picker, shape candidates, GPX export
 ├── components/
-│   ├── RouteMap.js          # Leaflet map with route overlay
-│   └── Directions.js        # Turn-by-turn panel
-├── lib/
-│   ├── routes.js            # SLU street data + route definitions
-│   └── gpx.js               # GPX generation + download
-├── package.json
-├── tailwind.config.js
-└── next.config.js
+│   └── RouteMap.js          # MapLibre map with route + preview overlays
+└── lib/
+    ├── overpass.js          # OSM road fetch + cache
+    ├── graph.js             # Road graph, spatial index, Dijkstra, grid angle
+    ├── shapeLibrary.js      # Shape templates
+    ├── shapeFitter.js       # Template fitting
+    ├── shapeScorer.js       # Quality metrics + reject gate
+    ├── discovery.js         # Orchestrator
+    └── gpx.js               # GPX generation + download
 ```
 
-## Next Steps to Build the Real Product
+## Product goal
 
-1. **Road snapping engine** — Replace hardcoded routes with OSMnx:
-   ```bash
-   pip install osmnx networkx
-   ```
-   Build a Python FastAPI backend that takes a shape + location and returns a road-snapped route.
-
-2. **AI shape generation** — Add Claude API to turn "Draw an Apple logo" into SVG coordinates:
-   ```bash
-   pip install anthropic
-   ```
-
-3. **More cities** — Download OSM graphs for SF, Portland, NYC, London.
-
-4. **Strava OAuth** — Add real Strava integration for direct route push.
-
-5. **Deploy** — `npx vercel` for frontend, Railway/Fly.io for Python backend.
+Given a start point, an activity (run / walk / ride) and a target distance, return 4–5 distinct,
+recognizable shape loops within ±15% of that distance. Scope: Seattle.
 
 ## Tech Stack
 
 | Layer | Tech |
 |-------|------|
 | Frontend | Next.js 14, React, Tailwind CSS |
-| Map | Leaflet + CARTO dark tiles |
-| Export | GPX XML generation |
-| Future backend | Python + FastAPI + OSMnx |
-| Future AI | Claude API (Sonnet) |
+| Map | MapLibre GL + CARTO dark tiles |
+| Roads | OpenStreetMap via Overpass API |
+| Export | GPX |
