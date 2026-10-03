@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { discoverShapes, formatDist, formatTime } from "../lib/discovery";
 import { downloadGPX } from "../lib/gpx";
+import { LOCATIONS, FETCH_RADIUS_KM } from "../lib/locations";
 
 const RouteMap = dynamic(() => import("../components/RouteMap"), {
   ssr: false,
@@ -13,26 +14,6 @@ const RouteMap = dynamic(() => import("../components/RouteMap"), {
     </div>
   ),
 });
-
-// Seattle neighborhoods with tight grids — good for GPS art
-const LOCATIONS = {
-  slu: {
-    name: "South Lake Union",
-    center: [47.6225, -122.3360],
-  },
-  capitolhill: {
-    name: "Capitol Hill",
-    center: [47.6250, -122.3220],
-  },
-  ballard: {
-    name: "Ballard",
-    center: [47.6685, -122.3850],
-  },
-  fremont: {
-    name: "Fremont",
-    center: [47.6510, -122.3500],
-  },
-};
 
 export default function Home() {
   const [location, setLocation] = useState("slu");
@@ -55,7 +36,7 @@ export default function Home() {
 
       try {
         const results = await discoverShapes(loc.center, {
-          radiusKm: 2.5,
+          radiusKm: FETCH_RADIUS_KM,
           maxResults: 7,
           onProgress: (p) => setPhase(p),
         });
