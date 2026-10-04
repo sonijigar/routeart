@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
- * MapLibre GL map with CARTO dark tiles + animated route overlay.
- * Replaces Leaflet for better Next.js compatibility and WebGL rendering.
+ * MapLibre GL map with OpenFreeMap dark tiles + route overlays.
  */
 export default function RouteMap({ route, loading, previewRoutes = [] }) {
   const containerRef = useRef(null);
@@ -19,32 +18,8 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
     import("maplibre-gl").then((maplibregl) => {
       const map = new maplibregl.Map({
         container: containerRef.current,
-        style: {
-          version: 8,
-          sources: {
-            carto: {
-              type: "raster",
-              tiles: [
-                "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-                "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-                "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-                "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-              ],
-              tileSize: 256,
-              attribution:
-                '&copy; <a href="https://openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-            },
-          },
-          layers: [
-            {
-              id: "carto-tiles",
-              type: "raster",
-              source: "carto",
-              minzoom: 0,
-              maxzoom: 19,
-            },
-          ],
-        },
+        // OpenFreeMap: free vector tiles, no API key (CARTO's raster tiles now require one)
+        style: "https://tiles.openfreemap.org/styles/dark",
         center: [-122.335, 47.627], // MapLibre uses [lng, lat]
         zoom: 12,
         attributionControl: true,
@@ -54,6 +29,21 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
         new maplibregl.NavigationControl({ showCompass: false }),
         "bottom-right"
       );
+
+      // If the tile style fails or is slow, fall back to a plain background so routes still draw
+      let fellBack = false;
+      const fallBack = (reason) => {
+        if (mapRef.current || fellBack) return;
+        fellBack = true;
+        console.warn("[Map] Base map unavailable, drawing routes without it:", reason);
+        map.setStyle({
+          version: 8,
+          sources: {},
+          layers: [{ id: "background", type: "background", paint: { "background-color": "#141418" } }],
+        });
+      };
+      map.on("error", (e) => fallBack(e?.error?.message || "error"));
+      setTimeout(() => fallBack("timed out"), 8000);
 
       map.on("load", () => {
         mapRef.current = map;

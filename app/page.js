@@ -36,6 +36,7 @@ export default function Home() {
 
       try {
         const results = await discoverShapes(loc.center, {
+          roadDataKey: locKey,
           radiusKm: FETCH_RADIUS_KM,
           maxResults: 7,
           onProgress: (p) => setPhase(p),
@@ -88,7 +89,7 @@ export default function Home() {
 
   const phaseLabel = {
     idle: "",
-    fetching: "Fetching roads...",
+    fetching: "Loading roads...",
     building: "Building graph...",
     fitting: "Finding shapes...",
     done: "",

@@ -3,7 +3,7 @@
   Eval harness: run shape fitting on fixed road data and report how it did.
 
   Locations: "grid" (synthetic perfect grid, always available) plus every
-  Seattle neighborhood with a fixture in fixtures/osm/ (see fetch-fixtures.mjs).
+  Seattle neighborhood with road data in public/roads/ (see fetch-fixtures.mjs).
 
   Usage:
     npm run eval
