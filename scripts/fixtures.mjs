@@ -1,7 +1,7 @@
 /*
-  Road-data fixtures for the eval harness.
+  Seattle road data, shared by the app and the eval harness.
 
-  Each fixture is fixtures/osm/<location>.json.gz holding a trimmed Overpass response:
+  Each file is public/roads/<location>.json.gz holding a trimmed Overpass response:
     { meta, nodes: [[id, lat, lon], ...], ways: [[id, tags, [nodeIds]], ...] }
   Only the tags the graph builder and road filter read are kept.
 */
@@ -10,8 +10,9 @@ import fs from "fs";
 import path from "path";
 import zlib from "zlib";
 import { fileURLToPath } from "url";
+import { expandRoadData } from "../lib/roadData.js";
 
-export const FIXTURE_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "fixtures", "osm");
+export const FIXTURE_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public", "roads");
 
 const KEEP_TAGS = [
   "highway", "name", "footway", "service", "access", "foot", "bicycle",
@@ -49,11 +50,8 @@ export function writeFixture(key, fixture) {
 export function loadFixture(key) {
   const p = fixturePath(key);
   if (!fs.existsSync(p)) return null;
-  const { meta, nodes, ways } = JSON.parse(zlib.gunzipSync(fs.readFileSync(p)));
-  const elements = [];
-  for (const [id, lat, lon] of nodes) elements.push({ type: "node", id, lat, lon });
-  for (const [id, tags, nds] of ways) elements.push({ type: "way", id, tags, nodes: nds });
-  return { meta, osmData: { elements } };
+  const fixture = JSON.parse(zlib.gunzipSync(fs.readFileSync(p)));
+  return { meta: fixture.meta, osmData: expandRoadData(fixture) };
 }
 
 /**

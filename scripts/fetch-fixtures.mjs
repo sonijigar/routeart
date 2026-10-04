@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
   Fetch OpenStreetMap road data for the app's Seattle neighborhoods and save it
-  as eval fixtures (fixtures/osm/<key>.json.gz).
+  to public/roads/<key>.json.gz — served to the app and used by the eval harness.
 
   Usage:
     npm run fetch-fixtures                 # all neighborhoods
@@ -55,7 +55,7 @@ for (const [i, key] of keys.entries()) {
   );
 }
 
-console.log("\nDone. Commit fixtures/osm/*.json.gz, then run: npm run eval");
+console.log("\nDone. Commit public/roads/*.json.gz, then run: npm run eval");
 
 async function fetchWithRetry(query, attempts = 4) {
   for (let attempt = 1; ; attempt++) {

@@ -11,7 +11,7 @@ npm run dev   # http://localhost:3000
 
 ## How it works
 
-1. **Road data** — walkable ways for the selected area are fetched from the OpenStreetMap Overpass API (`lib/overpass.js`).
+1. **Road data** — OpenStreetMap roads for each neighborhood are bundled in `public/roads/` (`lib/roadData.js`); the Overpass API (`lib/overpass.js`) is only a fallback.
 2. **Graph** — intersections become nodes and street segments become edges; Dijkstra routes between them (`lib/graph.js`).
 3. **Fitting** — shape templates (`lib/shapeLibrary.js`) are overlaid at several positions, sizes and rotations, routed through the graph, and scored (`lib/shapeFitter.js`, `lib/shapeScorer.js`).
 4. **Discovery** — the best candidate per shape is returned to the UI (`lib/discovery.js`), drawn on a MapLibre map (`components/RouteMap.js`) and exportable as GPX (`lib/gpx.js`).
@@ -19,7 +19,7 @@ npm run dev   # http://localhost:3000
 ## Evaluating shape quality
 
 ```bash
-npm run fetch-fixtures   # once: saves Seattle road data to fixtures/osm/ (committed)
+npm run fetch-fixtures   # refreshes Seattle road data in public/roads/ (committed)
 npm run eval -- --png    # fits every shape, writes eval/out/{report.json,sheet.html,sheet.png}
 npm run calibrate        # checks the shape score against hand labels (eval/labels.json)
 ```
@@ -44,7 +44,8 @@ routeart/
 ├── components/
 │   └── RouteMap.js          # MapLibre map with route + preview overlays
 ├── lib/
-│   ├── overpass.js          # OSM road fetch + cache
+│   ├── roadData.js          # Bundled road data loader
+│   ├── overpass.js          # OSM road fetch + cache (fallback)
 │   ├── roadFilter.js        # Which roads each activity (run/walk/ride) may use
 │   ├── locations.js         # Seattle neighborhoods
 │   ├── graph.js             # Road graph, spatial index, Dijkstra, grid angle
@@ -60,7 +61,7 @@ routeart/
 │   ├── make-labelset.mjs    # Freeze candidate routes for labeling
 │   ├── calibrate.mjs        # Score vs hand labels
 │   └── evalCommon.mjs       # Shared eval helpers
-├── fixtures/osm/            # Seattle road data (gzipped)
+├── public/roads/            # Seattle road data (gzipped), served to the app
 └── eval/                    # Label set + labels (eval/out/ is generated)
 ```
 
@@ -74,6 +75,6 @@ recognizable shape loops within ±15% of that distance. Scope: Seattle.
 | Layer | Tech |
 |-------|------|
 | Frontend | Next.js 14, React, Tailwind CSS |
-| Map | MapLibre GL + CARTO dark tiles |
-| Roads | OpenStreetMap via Overpass API |
+| Map | MapLibre GL + OpenFreeMap dark style |
+| Roads | OpenStreetMap, bundled per neighborhood (Overpass API fallback) |
 | Export | GPX |
