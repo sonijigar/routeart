@@ -19,13 +19,19 @@ npm run dev   # http://localhost:3000
 ## Evaluating shape quality
 
 ```bash
-npm run fetch-fixtures   # once: saves Seattle road data to fixtures/osm/ (commit it)
+npm run fetch-fixtures   # once: saves Seattle road data to fixtures/osm/ (committed)
 npm run eval -- --png    # fits every shape, writes eval/out/{report.json,sheet.html,sheet.png}
+npm run calibrate        # checks the shape score against hand labels (eval/labels.json)
 ```
 
 `npm run eval` always includes a synthetic perfect 100 m grid, the best case: if a shape fails
 there, the algorithm is at fault. Options: `--locations=grid,slu`, `--shapes=pixel-heart,star`,
 `--activity=run|walk|ride`, `--verbose`.
+
+The shape score (`lib/shapeScorer.js`) is checked against `eval/labels.json`: good / ok / bad
+judgements of the frozen candidate routes in `eval/labelset.json.gz`. Edit a label and re-run
+`npm run calibrate` to see how well the score agrees. `npm run make-labelset -- --png` rebuilds
+the candidate set (labels are keyed by candidate id, so new candidates need new labels).
 
 ## Project Structure
 
@@ -44,13 +50,18 @@ routeart/
 │   ├── graph.js             # Road graph, spatial index, Dijkstra, grid angle
 │   ├── shapeLibrary.js      # Shape templates
 │   ├── shapeFitter.js       # Template fitting
-│   ├── shapeScorer.js       # Quality metrics + reject gate
+│   ├── shapeScorer.js       # Shape score (calibrated) + reject gate
 │   ├── discovery.js         # Orchestrator
 │   └── gpx.js               # GPX generation + download
-└── scripts/
-    ├── fetch-fixtures.mjs   # Save Seattle road data for evals
-    ├── fixtures.mjs         # Fixture format + synthetic grid
-    └── eval.mjs             # Shape-quality eval harness
+├── scripts/
+│   ├── fetch-fixtures.mjs   # Save Seattle road data for evals
+│   ├── fixtures.mjs         # Fixture format + synthetic grid
+│   ├── eval.mjs             # Shape-quality eval harness
+│   ├── make-labelset.mjs    # Freeze candidate routes for labeling
+│   ├── calibrate.mjs        # Score vs hand labels
+│   └── evalCommon.mjs       # Shared eval helpers
+├── fixtures/osm/            # Seattle road data (gzipped)
+└── eval/                    # Label set + labels (eval/out/ is generated)
 ```
 
 ## Product goal
