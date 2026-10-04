@@ -13,7 +13,7 @@ npm run dev   # http://localhost:3000
 
 1. **Road data** — OpenStreetMap roads for each neighborhood are bundled in `public/roads/` (`lib/roadData.js`); the Overpass API (`lib/overpass.js`) is only a fallback.
 2. **Graph** — intersections become nodes and street segments become edges; Dijkstra routes between them (`lib/graph.js`).
-3. **Fitting** — shape templates (`lib/shapeLibrary.js`) are overlaid at several positions, sizes and rotations, routed through the graph, and scored (`lib/shapeFitter.js`, `lib/shapeScorer.js`).
+3. **Fitting** — shapes are pixel-art bitmaps (`lib/shapeLibrary.js`); each is laid square to the street grid at several cell sizes and positions, its corners are routed through the graph, and the loop is scored (`lib/shapeFitter.js`, `lib/shapeScorer.js`).
 4. **Discovery** — the best candidate per shape is returned to the UI (`lib/discovery.js`), drawn on a MapLibre map (`components/RouteMap.js`) and exportable as GPX (`lib/gpx.js`).
 
 ## Evaluating shape quality
@@ -29,9 +29,9 @@ there, the algorithm is at fault. Options: `--locations=grid,slu`, `--shapes=pix
 `--activity=run|walk|ride`, `--verbose`.
 
 The shape score (`lib/shapeScorer.js`) is checked against `eval/labels.json`: good / ok / bad
-judgements of the frozen candidate routes in `eval/labelset.json.gz`. Edit a label and re-run
-`npm run calibrate` to see how well the score agrees. `npm run make-labelset -- --png` rebuilds
-the candidate set (labels are keyed by candidate id, so new candidates need new labels).
+judgements of the frozen candidate routes in `eval/labelset-*.json.gz`, one file per batch. Edit a label and re-run
+`npm run calibrate` to see how well the score agrees. `npm run make-labelset -- --batch=<name> --png`
+adds a new batch to label (labels are keyed by candidate id).
 
 ## Project Structure
 
@@ -49,7 +49,7 @@ routeart/
 │   ├── roadFilter.js        # Which roads each activity (run/walk/ride) may use
 │   ├── locations.js         # Seattle neighborhoods
 │   ├── graph.js             # Road graph, spatial index, Dijkstra, grid angle
-│   ├── shapeLibrary.js      # Shape templates
+│   ├── shapeLibrary.js      # Pixel-art shape templates + outline tracer
 │   ├── shapeFitter.js       # Template fitting
 │   ├── shapeScorer.js       # Shape score (calibrated) + reject gate
 │   ├── discovery.js         # Orchestrator

@@ -8,12 +8,15 @@
   examples. Geometry is stored, so labels stay valid when the fitter changes.
 
   Usage:
-    npm run make-labelset            # writes eval/labelset.json.gz + blind label sheets
-    npm run make-labelset -- --png   # also screenshots the sheets
+    npm run make-labelset -- --batch=2a --start=101 --png
+
+  Each batch is a separate frozen file, so earlier labels stay valid when the
+  fitter or templates change. --start sets the first panel number, so numbers
+  stay unique across batches.
 
   Output:
-    eval/labelset.json.gz            candidates (committed)
-    eval/out/labelset-<page>.html    route-only panels, shuffled, numbered — no scores shown
+    eval/labelset-<batch>.json.gz          candidates (committed)
+    eval/out/labelset-<batch>-<page>.html  route-only panels, shuffled, numbered — no scores shown
 */
 
 import fs from "fs";
@@ -27,13 +30,17 @@ import {
   quietly, parseArgs, esc,
 } from "./evalCommon.mjs";
 
-export const LABELSET_PATH = path.join(EVAL_DIR, "labelset.json.gz");
-
 const RANK_FRACTIONS = [0, 0.3, 0.65]; // best, mid, low under the current score
 const PER_PAGE = 24;
 const COLS = 6;
 
 const args = parseArgs(process.argv.slice(2));
+if (!args.batch) {
+  console.error("Pass --batch=<name>, e.g. --batch=2a");
+  process.exit(1);
+}
+const LABELSET_PATH = path.join(EVAL_DIR, `labelset-${args.batch}.json.gz`);
+const FIRST_NUMBER = Number(args.start || 1);
 const activity = "run";
 const locations = loadLocations();
 const candidates = [];
@@ -48,14 +55,14 @@ for (const loc of locations) {
       const f = fits[rank];
       const { center, radius, rotation } = f.config;
       candidates.push({
-        id: `${loc.key}:${template.key}:r${radius}:rot${rotation}:${center[0].toFixed(5)},${center[1].toFixed(5)}`,
+        id: `${args.batch}:${loc.key}:${template.key}:r${radius}:rot${rotation}:${center[0].toFixed(5)},${center[1].toFixed(5)}`,
         location: loc.key,
         shape: template.key,
         shapeName: template.name,
         activity,
         rank,
         of: fits.length,
-        config: { center, radius, rotation },
+        config: f.config,
         distance: Math.round(f.distance),
         coords: round6(f.coords),
         outline: round6(transformOutline(template.outline, center, radius, rotation)),
@@ -71,7 +78,7 @@ for (let i = candidates.length - 1; i > 0; i--) {
   const j = Math.floor(rand() * (i + 1));
   [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
 }
-candidates.forEach((c, i) => (c.n = i + 1));
+candidates.forEach((c, i) => (c.n = FIRST_NUMBER + i, c.batch = args.batch));
 
 fs.writeFileSync(LABELSET_PATH, zlib.gzipSync(JSON.stringify({ createdAt: new Date().toISOString(), candidates })));
 console.log(`\nWrote ${path.relative(process.cwd(), LABELSET_PATH)} (${candidates.length} candidates)`);
@@ -94,7 +101,7 @@ for (let page = 0; page * PER_PAGE < candidates.length; page++) {
     svg += `<text x="6" y="${H + 12}" class="big">#${c.n} ${esc(c.shapeName)}?</text></g>`;
   });
   const width = COLS * W, height = rows * (H + LABEL);
-  const htmlPath = path.join(OUT_DIR, `labelset-${page + 1}.html`);
+  const htmlPath = path.join(OUT_DIR, `labelset-${args.batch}-${page + 1}.html`);
   fs.writeFileSync(htmlPath, sheetHtml(`Label set page ${page + 1}`, svg, width, height));
   if (args.png) screenshot(htmlPath, htmlPath.replace(/\.html$/, ".png"), width, height);
 }
