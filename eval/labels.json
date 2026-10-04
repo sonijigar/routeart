@@ -1,0 +1,342 @@
+{
+ "labeler": "claude (blind: route + intended shape only, no scores)",
+ "question": "Would someone seeing this route recognize it as the named shape? good = clearly, ok = recognizable but rough, bad = no",
+ "labels": {
+  "slu:pixel-heart:r800:rot50:47.62106,-122.33814": {
+   "n": 1,
+   "shape": "pixel-heart",
+   "label": "bad"
+  },
+  "ballard:cross:r800:rot10:47.66994,-122.38286": {
+   "n": 2,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "grid:cross:r1100:rot35:47.62448,-122.33600": {
+   "n": 3,
+   "shape": "cross",
+   "label": "ok",
+   "note": "X-shaped (rotated) cross"
+  },
+  "slu:star:r800:rot350:47.62250,-122.33814": {
+   "n": 4,
+   "shape": "star",
+   "label": "bad"
+  },
+  "grid:house:r1100:rot350:47.62250,-122.33894": {
+   "n": 5,
+   "shape": "house",
+   "label": "bad"
+  },
+  "capitolhill:smiley:r800:rot55:47.62356,-122.31986": {
+   "n": 6,
+   "shape": "smiley",
+   "label": "ok"
+  },
+  "grid:smiley:r1400:rot5:47.61998,-122.33600": {
+   "n": 7,
+   "shape": "smiley",
+   "label": "good"
+  },
+  "fremont:lightning:r800:rot35:47.65244,-122.34786": {
+   "n": 8,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "capitolhill:arrow:r800:rot55:47.62356,-122.31986": {
+   "n": 9,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "grid:lightning:r800:rot0:47.62394,-122.33814": {
+   "n": 10,
+   "shape": "lightning",
+   "label": "bad",
+   "note": "traces its template faithfully, but the template is a comb, not a bolt"
+  },
+  "ballard:pixel-heart:r800:rot35:47.66994,-122.38286": {
+   "n": 11,
+   "shape": "pixel-heart",
+   "label": "bad"
+  },
+  "capitolhill:lightning:r800:rot100:47.62356,-122.32414": {
+   "n": 12,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "capitolhill:smiley:r800:rot355:47.62356,-122.31986": {
+   "n": 13,
+   "shape": "smiley",
+   "label": "ok"
+  },
+  "grid:lightning:r1700:rot355:47.62250,-122.33146": {
+   "n": 14,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "grid:star:r800:rot0:47.62250,-122.33814": {
+   "n": 15,
+   "shape": "star",
+   "label": "bad"
+  },
+  "slu:star:r800:rot80:47.62106,-122.33814": {
+   "n": 16,
+   "shape": "star",
+   "label": "bad"
+  },
+  "grid:arrow:r800:rot45:47.62394,-122.33814": {
+   "n": 17,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "slu:arrow:r800:rot40:47.62250,-122.33600": {
+   "n": 18,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "grid:arrow:r800:rot355:47.62394,-122.33600": {
+   "n": 19,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "slu:lightning:r800:rot35:47.62106,-122.33600": {
+   "n": 20,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "grid:smiley:r1400:rot90:47.62250,-122.33600": {
+   "n": 21,
+   "shape": "smiley",
+   "label": "good"
+  },
+  "slu:arrow:r800:rot35:47.62106,-122.33386": {
+   "n": 22,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "ballard:star:r800:rot90:47.66994,-122.38714": {
+   "n": 23,
+   "shape": "star",
+   "label": "bad"
+  },
+  "grid:arrow:r1400:rot100:47.61998,-122.33974": {
+   "n": 24,
+   "shape": "arrow",
+   "label": "ok",
+   "note": "arrow pointing sideways"
+  },
+  "ballard:lightning:r800:rot80:47.66850,-122.38500": {
+   "n": 25,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "slu:smiley:r800:rot90:47.62106,-122.33814": {
+   "n": 26,
+   "shape": "smiley",
+   "label": "ok"
+  },
+  "slu:house:r800:rot95:47.62106,-122.33814": {
+   "n": 27,
+   "shape": "house",
+   "label": "bad"
+  },
+  "grid:house:r800:rot90:47.62106,-122.33386": {
+   "n": 28,
+   "shape": "house",
+   "label": "bad"
+  },
+  "ballard:pixel-heart:r800:rot45:47.66994,-122.38714": {
+   "n": 29,
+   "shape": "pixel-heart",
+   "label": "bad"
+  },
+  "ballard:star:r1100:rot90:47.67048,-122.38206": {
+   "n": 30,
+   "shape": "star",
+   "label": "bad"
+  },
+  "ballard:cross:r800:rot35:47.66994,-122.38714": {
+   "n": 31,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "ballard:arrow:r800:rot45:47.66994,-122.38500": {
+   "n": 32,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "capitolhill:lightning:r800:rot0:47.62356,-122.31986": {
+   "n": 33,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "ballard:arrow:r1100:rot45:47.66850,-122.38794": {
+   "n": 34,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "ballard:house:r800:rot55:47.66994,-122.38500": {
+   "n": 35,
+   "shape": "house",
+   "label": "bad"
+  },
+  "grid:cross:r800:rot90:47.62106,-122.33814": {
+   "n": 36,
+   "shape": "cross",
+   "label": "good"
+  },
+  "ballard:house:r800:rot40:47.66994,-122.38286": {
+   "n": 37,
+   "shape": "house",
+   "label": "bad"
+  },
+  "grid:smiley:r1400:rot55:47.61998,-122.33974": {
+   "n": 38,
+   "shape": "smiley",
+   "label": "good"
+  },
+  "slu:lightning:r800:rot5:47.62106,-122.33814": {
+   "n": 39,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "grid:cross:r1700:rot80:47.62250,-122.34054": {
+   "n": 40,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "capitolhill:smiley:r800:rot95:47.62356,-122.31986": {
+   "n": 41,
+   "shape": "smiley",
+   "label": "ok"
+  },
+  "grid:star:r2000:rot35:47.62610,-122.34135": {
+   "n": 42,
+   "shape": "star",
+   "label": "good"
+  },
+  "grid:pixel-heart:r1100:rot45:47.62448,-122.33600": {
+   "n": 43,
+   "shape": "pixel-heart",
+   "label": "bad"
+  },
+  "ballard:star:r800:rot5:47.66994,-122.38286": {
+   "n": 44,
+   "shape": "star",
+   "label": "bad"
+  },
+  "grid:pixel-heart:r1700:rot80:47.62556,-122.33146": {
+   "n": 45,
+   "shape": "pixel-heart",
+   "label": "ok",
+   "note": "heart tilted ~45°"
+  },
+  "capitolhill:arrow:r800:rot45:47.62356,-122.31986": {
+   "n": 46,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "slu:arrow:r800:rot45:47.62106,-122.33814": {
+   "n": 47,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "grid:pixel-heart:r800:rot55:47.62394,-122.33386": {
+   "n": 48,
+   "shape": "pixel-heart",
+   "label": "bad"
+  },
+  "fremont:lightning:r800:rot40:47.65244,-122.34786": {
+   "n": 49,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "slu:smiley:r800:rot350:47.62106,-122.33814": {
+   "n": 50,
+   "shape": "smiley",
+   "label": "ok"
+  },
+  "slu:cross:r800:rot35:47.62106,-122.33814": {
+   "n": 51,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "ballard:lightning:r800:rot50:47.66994,-122.38286": {
+   "n": 52,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "ballard:lightning:r800:rot100:47.66994,-122.38286": {
+   "n": 53,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "capitolhill:star:r2000:rot35:47.62140,-122.31665": {
+   "n": 54,
+   "shape": "star",
+   "label": "good",
+   "note": "real-street star"
+  },
+  "ballard:pixel-heart:r800:rot10:47.66994,-122.38286": {
+   "n": 55,
+   "shape": "pixel-heart",
+   "label": "ok",
+   "note": "real-street heart: two lobes and a point"
+  },
+  "grid:lightning:r1100:rot350:47.62250,-122.33306": {
+   "n": 56,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "slu:cross:r800:rot40:47.62106,-122.33814": {
+   "n": 57,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "ballard:arrow:r800:rot45:47.66994,-122.38714": {
+   "n": 58,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "capitolhill:arrow:r800:rot350:47.62356,-122.32200": {
+   "n": 59,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "grid:house:r1400:rot95:47.61998,-122.33600": {
+   "n": 60,
+   "shape": "house",
+   "label": "bad"
+  },
+  "slu:lightning:r800:rot10:47.62250,-122.33600": {
+   "n": 61,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "grid:star:r800:rot95:47.62394,-122.33814": {
+   "n": 62,
+   "shape": "star",
+   "label": "bad"
+  },
+  "capitolhill:lightning:r800:rot95:47.62356,-122.32414": {
+   "n": 63,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "ballard:cross:r800:rot95:47.66994,-122.38286": {
+   "n": 64,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "slu:star:r800:rot10:47.62106,-122.33814": {
+   "n": 65,
+   "shape": "star",
+   "label": "bad"
+  },
+  "capitolhill:star:r800:rot95:47.62356,-122.31986": {
+   "n": 66,
+   "shape": "star",
+   "label": "bad"
+  }
+ }
+}

@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "fetch-fixtures": "node scripts/fetch-fixtures.mjs",
-    "eval": "node scripts/eval.mjs"
+    "eval": "node scripts/eval.mjs",
+    "make-labelset": "node scripts/make-labelset.mjs",
+    "calibrate": "node scripts/calibrate.mjs"
   },
   "dependencies": {
     "maplibre-gl": "^4.7.1",
