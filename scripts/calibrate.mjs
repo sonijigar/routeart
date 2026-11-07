@@ -3,7 +3,7 @@
   Check the shape score (lib/shapeScorer.js) against hand labels.
 
   Inputs (both committed):
-    eval/labelset.json.gz   frozen candidate routes (npm run make-labelset)
+    eval/labelset*.json.gz  frozen candidate routes, one file per batch (npm run make-labelset)
     eval/labels.json        good / ok / bad per candidate id — edit to override labels
 
   Usage:
@@ -21,7 +21,10 @@ import { computeMetrics, SCORE_GATE } from "../lib/shapeScorer.js";
 import { EVAL_DIR, OUT_DIR, sheetHtml, projector, screenshot, parseArgs, esc } from "./evalCommon.mjs";
 
 const args = parseArgs(process.argv.slice(2));
-const { candidates } = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(EVAL_DIR, "labelset.json.gz"))));
+const batchFiles = fs.readdirSync(EVAL_DIR).filter((f) => /^labelset.*\.json\.gz$/.test(f)).sort();
+const candidates = batchFiles.flatMap((f) =>
+  JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(EVAL_DIR, f)))).candidates.map((c) => ({ batch: "1", ...c }))
+);
 const { labels } = JSON.parse(fs.readFileSync(path.join(EVAL_DIR, "labels.json")));
 const RANK = { good: 2, ok: 1, bad: 0 };
 

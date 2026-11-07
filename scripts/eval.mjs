@@ -110,7 +110,7 @@ function summaryLine(r) {
   return (
     `${r.shape.padEnd(12)} ${r.passesGate ? "pass" : "FAIL"} score=${m.score.toFixed(2)} ` +
     `iou=${m.iou.toFixed(2)} gap=${m.outlineGap90.toFixed(2)} dbl=${m.doubledBack.toFixed(2)} ` +
-    `${(r.distanceM / 1000).toFixed(1)}km r=${r.config.radius} rot=${r.config.rotation} (${r.ms}ms)`
+    `${(r.distanceM / 1000).toFixed(1)}km cell=${r.config.cell} rot=${r.config.rotation} (${r.ms}ms)`
   );
 }
 
@@ -135,7 +135,7 @@ function renderSheet(locations, results, templates) {
         svg += `<polyline points="${proj.points(r.coords)}" class="route"/>`;
         const m = r.metrics;
         svg += `<text x="6" y="${H + 8}" class="lbl">${t.key} <tspan class="${r.passesGate ? "ok" : "bad"}">${r.passesGate ? "pass" : "FAIL"}</tspan> s=${m.score.toFixed(2)}</text>`;
-        svg += `<text x="6" y="${H + 22}" class="sub">${(r.distanceM / 1000).toFixed(1)}km r=${r.config.radius} rot=${r.config.rotation} iou=${m.iou.toFixed(2)} ${r.ms}ms</text>`;
+        svg += `<text x="6" y="${H + 22}" class="sub">${(r.distanceM / 1000).toFixed(1)}km cell=${r.config.cell} rot=${r.config.rotation} iou=${m.iou.toFixed(2)} ${r.ms}ms</text>`;
       } else {
         svg += `<text x="6" y="${H + 8}" class="lbl">${t.key} <tspan class="bad">NOT FOUND</tspan></text>`;
       }
