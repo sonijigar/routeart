@@ -5,11 +5,17 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
  * MapLibre GL map with OpenFreeMap dark tiles + route overlays.
+ *
+ * - route: selected loop ({ coords, start }), drawn with a glow; leadIn: dashed path from the start to it
+ * - previewRoutes: other candidates, drawn faintly
+ * - startPoint: [lat, lng] pin where the user starts; onMapClick(lat, lng) lets them move it
  */
-export default function RouteMap({ route, loading, previewRoutes = [] }) {
+export default function RouteMap({ route, loading, previewRoutes = [], startPoint = null, leadIn = null, onMapClick }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const onMapClickRef = useRef(onMapClick);
+  onMapClickRef.current = onMapClick;
 
   // Init map once
   useEffect(() => {
@@ -49,6 +55,8 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
         mapRef.current = map;
         setReady(true);
       });
+
+      map.on("click", (e) => onMapClickRef.current?.(e.lngLat.lat, e.lngLat.lng));
     });
 
     return () => {
@@ -65,10 +73,10 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
     const map = mapRef.current;
 
     // Clear old route layers and sources
-    ["route-glow", "route-mid", "route-line"].forEach((id) => {
+    ["route-glow", "route-mid", "route-line", "lead-in"].forEach((id) => {
       if (map.getLayer(id)) map.removeLayer(id);
     });
-    if (map.getSource("route")) map.removeSource("route");
+    ["route", "lead-in"].forEach((id) => map.getSource(id) && map.removeSource(id));
 
     // Clear old markers
     if (map._routeMarkers) {
@@ -129,9 +137,25 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
       },
     });
 
-    // Fit bounds to route
-    const lngs = coords.map((c) => c[0]);
-    const lats = coords.map((c) => c[1]);
+    // Dashed lead-in from the start point to where the loop begins
+    const leadCoords = (leadIn || []).map(([lat, lng]) => [lng, lat]);
+    if (leadCoords.length >= 2) {
+      map.addSource("lead-in", {
+        type: "geojson",
+        data: { type: "Feature", geometry: { type: "LineString", coordinates: leadCoords } },
+      });
+      map.addLayer({
+        id: "lead-in",
+        type: "line",
+        source: "lead-in",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: { "line-color": "#ffffff", "line-width": 2, "line-opacity": 0.5, "line-dasharray": [2, 2] },
+      });
+    }
+
+    // Fit bounds to route and lead-in
+    const lngs = [...coords, ...leadCoords].map((c) => c[0]);
+    const lats = [...coords, ...leadCoords].map((c) => c[1]);
     map.fitBounds(
       [
         [Math.min(...lngs), Math.min(...lats)],
@@ -152,26 +176,31 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
       const startMarker = new maplibregl.Marker({ element: startEl })
         .setLngLat(coords[0])
         .setPopup(
-          new maplibregl.Popup({ offset: 12 }).setHTML(
-            `<b>START</b><br/>${route.start}`
-          )
+          new maplibregl.Popup({ offset: 12 }).setHTML(`<b>Loop starts and ends here</b>`)
         )
         .addTo(map);
       map._routeMarkers.push(startMarker);
-
-      // End marker (red dot)
-      const endEl = document.createElement("div");
-      endEl.innerHTML = `<div style="width:16px;height:16px;border-radius:50%;background:#ef4444;border:2.5px solid #fff;box-shadow:0 0 12px rgba(239,68,68,0.5)"></div>`;
-
-      const endMarker = new maplibregl.Marker({ element: endEl })
-        .setLngLat(coords[coords.length - 1])
-        .setPopup(
-          new maplibregl.Popup({ offset: 12 }).setHTML(`<b>FINISH</b>`)
-        )
-        .addTo(map);
-      map._routeMarkers.push(endMarker);
     });
-  }, [route, ready]);
+  }, [route, leadIn, ready]);
+
+  // Start-point pin
+  useEffect(() => {
+    if (!ready || !mapRef.current) return;
+    const map = mapRef.current;
+    map._startPin?.remove();
+    map._startPin = null;
+    if (!startPoint) return;
+
+    const el = document.createElement("div");
+    el.innerHTML = `<div style="width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #3b82f6;box-shadow:0 0 10px rgba(59,130,246,0.6)"></div>`;
+    import("maplibre-gl").then((maplibregl) => {
+      map._startPin = new maplibregl.Marker({ element: el })
+        .setLngLat([startPoint[1], startPoint[0]])
+        .addTo(map);
+    });
+    if (!route) map.easeTo({ center: [startPoint[1], startPoint[0]], zoom: Math.max(map.getZoom(), 13) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startPoint, ready]);
 
   // Update preview routes (unselected candidates shown as faint lines)
   useEffect(() => {
@@ -234,7 +263,7 @@ export default function RouteMap({ route, loading, previewRoutes = [] }) {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
             <div className="text-white/15 text-base font-mono">Seattle</div>
-            <div className="text-white/7 text-xs font-mono mt-2">Discovering shapes for your area...</div>
+            <div className="text-white/7 text-xs font-mono mt-2">Tap the map to choose where you start</div>
           </div>
         </div>
       )}
