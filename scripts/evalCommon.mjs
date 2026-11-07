@@ -102,7 +102,8 @@ function findChrome() {
   const pw = "/opt/pw-browsers";
   if (fs.existsSync(pw)) {
     for (const d of fs.readdirSync(pw)) {
-      if (d.startsWith("chromium-")) candidates.push(path.join(pw, d, "chrome-linux", "chrome"));
+      if (!d.startsWith("chromium-")) continue;
+      candidates.push(path.join(pw, d, "chrome-linux", "chrome"), path.join(pw, d, "chrome-linux64", "chrome"));
     }
   }
   return candidates.find((p) => p && fs.existsSync(p));

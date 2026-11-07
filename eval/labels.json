@@ -670,6 +670,532 @@
    "n": 166,
    "shape": "loop",
    "label": "ok"
+  },
+  "2b:fremont:arrow:r630:rot0:47.65100,-122.35094": {
+   "n": 201,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:grid:cross:r900:rot0:47.61890,-122.34135": {
+   "n": 202,
+   "shape": "cross",
+   "label": "good"
+  },
+  "2b:grid:star:r765:rot0:47.62327,-122.33941": {
+   "n": 203,
+   "shape": "star",
+   "label": "good"
+  },
+  "2b:ballard:star:r1080:rot0:47.67282,-122.38982": {
+   "n": 204,
+   "shape": "star",
+   "label": "bad"
+  },
+  "2b:capitolhill:arrow:r900:rot0:47.62230,-122.31665": {
+   "n": 205,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "2b:fremont:house:r765:rot0:47.65023,-122.35341": {
+   "n": 206,
+   "shape": "house",
+   "label": "bad"
+  },
+  "2b:capitolhill:heart:r630:rot0:47.62437,-122.31826": {
+   "n": 207,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:grid:loop:r1080:rot0:47.62034,-122.33921": {
+   "n": 208,
+   "shape": "loop",
+   "label": "good"
+  },
+  "2b:ballard:heart:r765:rot0:47.67080,-122.38386": {
+   "n": 209,
+   "shape": "heart",
+   "label": "ok"
+  },
+  "2b:slu:cross:r630:rot0:47.62187,-122.33600": {
+   "n": 210,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:ballard:cross:r1080:rot0:47.67174,-122.38500": {
+   "n": 211,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "2b:grid:heart:r1080:rot0:47.62466,-122.32958": {
+   "n": 212,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:slu:cross:r765:rot0:47.61944,-122.33941": {
+   "n": 213,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "2b:ballard:arrow:r1080:rot0:47.66634,-122.38821": {
+   "n": 214,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:fremont:loop:r765:rot0:47.65023,-122.35341": {
+   "n": 215,
+   "shape": "loop",
+   "label": "bad"
+  },
+  "2b:fremont:cross:r630:rot0:47.65226,-122.35094": {
+   "n": 216,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:ballard:lightning:r1200:rot0:47.66850,-122.38018": {
+   "n": 217,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "2b:ballard:cross:r900:rot0:47.66580,-122.38634": {
+   "n": 218,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:ballard:house:r900:rot0:47.66580,-122.38634": {
+   "n": 219,
+   "shape": "house",
+   "label": "bad"
+  },
+  "2b:capitolhill:house:r765:rot0:47.62347,-122.32654": {
+   "n": 220,
+   "shape": "house",
+   "label": "ok"
+  },
+  "2b:slu:lightning:r700:rot0:47.62061,-122.33694": {
+   "n": 221,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "2b:fremont:arrow:r1080:rot0:47.65100,-122.35000": {
+   "n": 222,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:grid:arrow:r1080:rot0:47.61818,-122.33279": {
+   "n": 223,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "2b:ballard:house:r1080:rot0:47.67282,-122.37858": {
+   "n": 224,
+   "shape": "house",
+   "label": "ok"
+  },
+  "2b:grid:arrow:r765:rot0:47.62403,-122.33827": {
+   "n": 225,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "2b:capitolhill:heart:r900:rot0:47.62140,-122.32200": {
+   "n": 226,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:capitolhill:house:r1080:rot0:47.62176,-122.31879": {
+   "n": 227,
+   "shape": "house",
+   "label": "bad"
+  },
+  "2b:ballard:lightning:r1200:rot0:47.66850,-122.38339": {
+   "n": 228,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "2b:capitolhill:lightning:r700:rot0:47.62563,-122.32013": {
+   "n": 229,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "2b:fremont:heart:r900:rot0:47.65460,-122.34599": {
+   "n": 230,
+   "shape": "heart",
+   "label": "ok"
+  },
+  "2b:slu:house:r630:rot0:47.61998,-122.33226": {
+   "n": 231,
+   "shape": "house",
+   "label": "bad"
+  },
+  "2b:slu:star:r1080:rot0:47.62358,-122.34081": {
+   "n": 232,
+   "shape": "star",
+   "label": "ok"
+  },
+  "2b:fremont:arrow:r900:rot0:47.64740,-122.35401": {
+   "n": 233,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:capitolhill:loop:r765:rot0:47.62194,-122.31746": {
+   "n": 234,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:slu:star:r630:rot0:47.61998,-122.33881": {
+   "n": 235,
+   "shape": "star",
+   "label": "ok"
+  },
+  "2b:grid:cross:r765:rot0:47.62403,-122.33259": {
+   "n": 236,
+   "shape": "cross",
+   "label": "good"
+  },
+  "2b:slu:lightning:r1000:rot0:47.61890,-122.34135": {
+   "n": 237,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "2b:fremont:lightning:r850:rot0:47.65253,-122.35455": {
+   "n": 238,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "2b:ballard:star:r1080:rot0:47.66526,-122.38661": {
+   "n": 239,
+   "shape": "star",
+   "label": "bad"
+  },
+  "2b:fremont:loop:r630:rot0:47.65352,-122.34626": {
+   "n": 240,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:slu:star:r900:rot0:47.61890,-122.33867": {
+   "n": 241,
+   "shape": "star",
+   "label": "ok"
+  },
+  "2b:capitolhill:arrow:r1080:rot0:47.62500,-122.32360": {
+   "n": 242,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:ballard:heart:r765:rot0:47.67156,-122.38159": {
+   "n": 243,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:fremont:heart:r765:rot0:47.65330,-122.35341": {
+   "n": 244,
+   "shape": "heart",
+   "label": "bad"
+  },
+  "2b:fremont:cross:r1080:rot0:47.65532,-122.34358": {
+   "n": 245,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:grid:arrow:r900:rot0:47.61890,-122.34135": {
+   "n": 246,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "2b:capitolhill:heart:r630:rot0:47.62311,-122.32200": {
+   "n": 247,
+   "shape": "heart",
+   "label": "bad"
+  },
+  "2b:grid:loop:r765:rot0:47.62097,-122.33941": {
+   "n": 248,
+   "shape": "loop",
+   "label": "good"
+  },
+  "2b:fremont:loop:r765:rot0:47.65406,-122.35227": {
+   "n": 249,
+   "shape": "loop",
+   "label": "bad"
+  },
+  "2b:capitolhill:lightning:r1000:rot0:47.62320,-122.31665": {
+   "n": 250,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "2b:capitolhill:star:r630:rot0:47.62437,-122.32106": {
+   "n": 251,
+   "shape": "star",
+   "label": "ok"
+  },
+  "2b:fremont:house:r1080:rot0:47.65532,-122.34679": {
+   "n": 252,
+   "shape": "house",
+   "label": "ok"
+  },
+  "2b:slu:house:r1080:rot0:47.61926,-122.32958": {
+   "n": 253,
+   "shape": "house",
+   "label": "ok"
+  },
+  "2b:ballard:cross:r1080:rot0:47.67282,-122.37858": {
+   "n": 254,
+   "shape": "cross",
+   "label": "good"
+  },
+  "2b:ballard:house:r900:rot0:47.67030,-122.38366": {
+   "n": 255,
+   "shape": "house",
+   "label": "ok"
+  },
+  "2b:capitolhill:lightning:r1000:rot0:47.62770,-122.32200": {
+   "n": 256,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "2b:grid:house:r1080:rot0:47.62574,-122.32958": {
+   "n": 257,
+   "shape": "house",
+   "label": "good"
+  },
+  "2b:grid:cross:r630:rot0:47.62439,-122.33506": {
+   "n": 258,
+   "shape": "cross",
+   "label": "good"
+  },
+  "2b:slu:arrow:r1080:rot0:47.61818,-122.34242": {
+   "n": 259,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:capitolhill:cross:r765:rot0:47.62194,-122.31746": {
+   "n": 260,
+   "shape": "cross",
+   "label": "good"
+  },
+  "2b:fremont:star:r765:rot0:47.64870,-122.35455": {
+   "n": 261,
+   "shape": "star",
+   "label": "bad"
+  },
+  "2b:grid:loop:r900:rot0:47.61890,-122.34135": {
+   "n": 262,
+   "shape": "loop",
+   "label": "good"
+  },
+  "2b:grid:lightning:r1200:rot0:47.62034,-122.33921": {
+   "n": 263,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "2b:slu:loop:r630:rot0:47.62187,-122.33226": {
+   "n": 264,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:grid:house:r900:rot0:47.61890,-122.34135": {
+   "n": 265,
+   "shape": "house",
+   "label": "good"
+  },
+  "2b:slu:loop:r630:rot0:47.61998,-122.33787": {
+   "n": 266,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:slu:house:r1080:rot0:47.61818,-122.33119": {
+   "n": 267,
+   "shape": "house",
+   "label": "bad"
+  },
+  "2b:grid:star:r900:rot0:47.61890,-122.34135": {
+   "n": 268,
+   "shape": "star",
+   "label": "good"
+  },
+  "2b:ballard:lightning:r1200:rot0:47.67282,-122.38018": {
+   "n": 269,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "2b:slu:cross:r630:rot0:47.62250,-122.33974": {
+   "n": 270,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "2b:slu:heart:r495:rot0:47.62300,-122.33526": {
+   "n": 271,
+   "shape": "heart",
+   "label": "ok"
+  },
+  "2b:capitolhill:house:r900:rot0:47.62230,-122.32467": {
+   "n": 272,
+   "shape": "house",
+   "label": "ok"
+  },
+  "2b:slu:lightning:r700:rot0:47.62187,-122.33506": {
+   "n": 273,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "2b:capitolhill:loop:r630:rot0:47.62689,-122.31826": {
+   "n": 274,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:grid:lightning:r1000:rot0:47.61890,-122.34135": {
+   "n": 275,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "2b:ballard:loop:r630:rot0:47.67102,-122.38125": {
+   "n": 276,
+   "shape": "loop",
+   "label": "bad",
+   "note": "square with a diagonal cut, not a loop"
+  },
+  "2b:fremont:heart:r765:rot0:47.65406,-122.35227": {
+   "n": 277,
+   "shape": "heart",
+   "label": "ok"
+  },
+  "2b:fremont:star:r900:rot0:47.64920,-122.35401": {
+   "n": 278,
+   "shape": "star",
+   "label": "bad"
+  },
+  "2b:grid:lightning:r850:rot0:47.62480,-122.33600": {
+   "n": 279,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "2b:fremont:lightning:r1200:rot0:47.65424,-122.34679": {
+   "n": 280,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "2b:slu:heart:r1080:rot0:47.61818,-122.34081": {
+   "n": 281,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:grid:heart:r630:rot0:47.61998,-122.33881": {
+   "n": 282,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:capitolhill:arrow:r630:rot0:47.62248,-122.32013": {
+   "n": 283,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "2b:grid:star:r1080:rot0:47.62358,-122.33921": {
+   "n": 284,
+   "shape": "star",
+   "label": "good"
+  },
+  "2b:ballard:arrow:r765:rot0:47.66850,-122.38500": {
+   "n": 285,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "2b:slu:loop:r1080:rot0:47.61926,-122.33600": {
+   "n": 286,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:grid:heart:r900:rot0:47.61890,-122.34135": {
+   "n": 287,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:capitolhill:cross:r630:rot0:47.62374,-122.32106": {
+   "n": 288,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:fremont:lightning:r1200:rot0:47.64884,-122.35481": {
+   "n": 289,
+   "shape": "lightning",
+   "label": "bad"
+  },
+  "2b:fremont:cross:r765:rot0:47.65100,-122.34659": {
+   "n": 290,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:fremont:house:r765:rot0:47.65100,-122.35341": {
+   "n": 291,
+   "shape": "house",
+   "label": "bad"
+  },
+  "2b:slu:arrow:r1080:rot0:47.61926,-122.33440": {
+   "n": 292,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "2b:ballard:arrow:r1080:rot0:47.67282,-122.37858": {
+   "n": 293,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "2b:ballard:loop:r1080:rot0:47.66634,-122.39142": {
+   "n": 294,
+   "shape": "loop",
+   "label": "bad"
+  },
+  "2b:slu:heart:r495:rot0:47.62101,-122.33747": {
+   "n": 295,
+   "shape": "heart",
+   "label": "good"
+  },
+  "2b:capitolhill:star:r900:rot0:47.62410,-122.31665": {
+   "n": 296,
+   "shape": "star",
+   "label": "good"
+  },
+  "2b:ballard:loop:r900:rot0:47.66490,-122.38768": {
+   "n": 297,
+   "shape": "loop",
+   "label": "bad"
+  },
+  "2b:capitolhill:loop:r495:rot0:47.62550,-122.31906": {
+   "n": 298,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "2b:slu:arrow:r630:rot0:47.61998,-122.33506": {
+   "n": 299,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "2b:capitolhill:cross:r630:rot0:47.62437,-122.31919": {
+   "n": 300,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "2b:grid:house:r630:rot0:47.61998,-122.33974": {
+   "n": 301,
+   "shape": "house",
+   "label": "good"
+  },
+  "2b:ballard:star:r1080:rot0:47.66418,-122.38339": {
+   "n": 302,
+   "shape": "star",
+   "label": "bad"
+  },
+  "2b:fremont:star:r1080:rot0:47.65532,-122.34679": {
+   "n": 303,
+   "shape": "star",
+   "label": "bad"
+  },
+  "2b:capitolhill:star:r900:rot0:47.62410,-122.32066": {
+   "n": 304,
+   "shape": "star",
+   "label": "ok"
+  },
+  "2b:ballard:heart:r1080:rot0:47.67282,-122.37858": {
+   "n": 305,
+   "shape": "heart",
+   "label": "good"
   }
  }
 }
