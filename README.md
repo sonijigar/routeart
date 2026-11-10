@@ -14,7 +14,7 @@ npm run dev   # http://localhost:3000
 1. **Road data** — OpenStreetMap roads for each neighborhood are bundled in `public/roads/` (`lib/roadData.js`); the Overpass API (`lib/overpass.js`) is only a fallback.
 2. **Graph** — intersections become nodes and street segments become edges; Dijkstra routes between them (`lib/graph.js`).
 3. **Fitting** — shapes are pixel-art bitmaps (`lib/shapeLibrary.js`); each is laid square to the street grid at several cell sizes and positions, each side is routed along the streets closest to its ideal line (out-and-back spurs trimmed), and the loop is scored (`lib/shapeFitter.js`, `lib/shapeScorer.js`).
-4. **Discovery** — the best candidate per shape is returned to the UI (`lib/discovery.js`), drawn on a MapLibre map (`components/RouteMap.js`) and exportable as GPX (`lib/gpx.js`).
+4. **Discovery** — the user picks an activity (run / walk / ride), a target distance and a start point (GPS, a neighborhood, or a tap on the map). Shapes are sized for the distance and placed around the start; the best candidate per shape is returned (`lib/discovery.js`), its loop beginning at the point nearest the start with a routed lead-in, drawn on a MapLibre map (`components/RouteMap.js`) and exportable as GPX (`lib/gpx.js`).
 
 ## Evaluating shape quality
 
@@ -25,8 +25,9 @@ npm run calibrate        # checks the shape score against hand labels (eval/labe
 ```
 
 `npm run eval` always includes a synthetic perfect 100 m grid, the best case: if a shape fails
-there, the algorithm is at fault. Options: `--locations=grid,slu`, `--shapes=pixel-heart,star`,
-`--activity=run|walk|ride`, `--verbose`.
+there, the algorithm is at fault. Options: `--locations=grid,slu`, `--shapes=heart,star`,
+`--activity=run|walk|ride`, `--distance=<km>` (size shapes for a target and report how close
+routes come), `--verbose`.
 
 The shape score (`lib/shapeScorer.js`) is checked against `eval/labels.json`: good / ok / bad
 judgements of the frozen candidate routes in `eval/labelset-*.json.gz`, one file per batch. Edit a label and re-run
@@ -40,14 +41,14 @@ routeart/
 ├── app/
 │   ├── globals.css
 │   ├── layout.js
-│   └── page.js              # Location picker, shape candidates, GPX export
+│   └── page.js              # Activity / distance / start controls, shape candidates, GPX export
 ├── components/
 │   └── RouteMap.js          # MapLibre map with route + preview overlays
 ├── lib/
 │   ├── roadData.js          # Bundled road data loader
 │   ├── overpass.js          # OSM road fetch + cache (fallback)
 │   ├── roadFilter.js        # Which roads each activity (run/walk/ride) may use
-│   ├── locations.js         # Seattle neighborhoods
+│   ├── locations.js         # Seattle neighborhoods + which bundle covers a start point
 │   ├── graph.js             # Road graph, spatial index, corridor Dijkstra, grid angle
 │   ├── shapeLibrary.js      # Pixel-art shape templates + outline tracer
 │   ├── shapeFitter.js       # Template fitting

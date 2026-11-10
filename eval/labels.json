@@ -1196,6 +1196,256 @@
    "n": 305,
    "shape": "heart",
    "label": "good"
+  },
+  "ab8km:base:capitolhill:arrow": {
+   "n": 401,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "ab8km:base:capitolhill:house": {
+   "n": 402,
+   "shape": "house",
+   "label": "bad"
+  },
+  "ab8km:base:fremont:loop": {
+   "n": 403,
+   "shape": "loop",
+   "label": "bad"
+  },
+  "ab8km:new:slu:arrow": {
+   "n": 404,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "ab8km:base:capitolhill:cross": {
+   "n": 405,
+   "shape": "cross",
+   "label": "good"
+  },
+  "ab8km:new:fremont:arrow": {
+   "n": 406,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "ab8km:new:ballard:house": {
+   "n": 407,
+   "shape": "house",
+   "label": "ok"
+  },
+  "ab8km:base:slu:loop": {
+   "n": 408,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "ab8km:new:capitolhill:star": {
+   "n": 409,
+   "shape": "star",
+   "label": "good"
+  },
+  "ab8km:base:fremont:cross": {
+   "n": 410,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "ab8km:new:fremont:heart": {
+   "n": 411,
+   "shape": "heart",
+   "label": "ok"
+  },
+  "ab8km:new:fremont:star": {
+   "n": 412,
+   "shape": "star",
+   "label": "ok"
+  },
+  "ab8km:base:slu:lightning": {
+   "n": 413,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "ab8km:base:fremont:arrow": {
+   "n": 414,
+   "shape": "arrow",
+   "label": "bad"
+  },
+  "ab8km:base:capitolhill:lightning": {
+   "n": 415,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "ab8km:base:ballard:cross": {
+   "n": 416,
+   "shape": "cross",
+   "label": "good"
+  },
+  "ab8km:new:fremont:lightning": {
+   "n": 417,
+   "shape": "lightning",
+   "label": "good"
+  },
+  "ab8km:base:ballard:arrow": {
+   "n": 418,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "ab8km:base:fremont:star": {
+   "n": 419,
+   "shape": "star",
+   "label": "ok"
+  },
+  "ab8km:new:fremont:house": {
+   "n": 420,
+   "shape": "house",
+   "label": "ok"
+  },
+  "ab8km:base:slu:heart": {
+   "n": 421,
+   "shape": "heart",
+   "label": "good"
+  },
+  "ab8km:new:ballard:cross": {
+   "n": 422,
+   "shape": "cross",
+   "label": "good"
+  },
+  "ab8km:base:fremont:heart": {
+   "n": 423,
+   "shape": "heart",
+   "label": "ok"
+  },
+  "ab8km:new:slu:cross": {
+   "n": 424,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "ab8km:new:slu:loop": {
+   "n": 425,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "ab8km:base:slu:house": {
+   "n": 426,
+   "shape": "house",
+   "label": "bad"
+  },
+  "ab8km:new:capitolhill:cross": {
+   "n": 427,
+   "shape": "cross",
+   "label": "good"
+  },
+  "ab8km:base:ballard:house": {
+   "n": 428,
+   "shape": "house",
+   "label": "ok"
+  },
+  "ab8km:new:capitolhill:arrow": {
+   "n": 429,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "ab8km:new:capitolhill:heart": {
+   "n": 430,
+   "shape": "heart",
+   "label": "good"
+  },
+  "ab8km:new:slu:heart": {
+   "n": 431,
+   "shape": "heart",
+   "label": "good"
+  },
+  "ab8km:new:fremont:loop": {
+   "n": 432,
+   "shape": "loop",
+   "label": "bad"
+  },
+  "ab8km:base:fremont:lightning": {
+   "n": 433,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "ab8km:new:capitolhill:lightning": {
+   "n": 434,
+   "shape": "lightning",
+   "label": "ok"
+  },
+  "ab8km:base:slu:star": {
+   "n": 435,
+   "shape": "star",
+   "label": "ok"
+  },
+  "ab8km:base:capitolhill:loop": {
+   "n": 436,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "ab8km:base:slu:arrow": {
+   "n": 437,
+   "shape": "arrow",
+   "label": "ok"
+  },
+  "ab8km:new:capitolhill:house": {
+   "n": 438,
+   "shape": "house",
+   "label": "good"
+  },
+  "ab8km:base:capitolhill:heart": {
+   "n": 439,
+   "shape": "heart",
+   "label": "good"
+  },
+  "ab8km:base:capitolhill:star": {
+   "n": 440,
+   "shape": "star",
+   "label": "good"
+  },
+  "ab8km:new:ballard:arrow": {
+   "n": 441,
+   "shape": "arrow",
+   "label": "good"
+  },
+  "ab8km:base:slu:cross": {
+   "n": 442,
+   "shape": "cross",
+   "label": "ok"
+  },
+  "ab8km:new:ballard:heart": {
+   "n": 443,
+   "shape": "heart",
+   "label": "good"
+  },
+  "ab8km:new:capitolhill:loop": {
+   "n": 444,
+   "shape": "loop",
+   "label": "ok"
+  },
+  "ab8km:base:fremont:house": {
+   "n": 445,
+   "shape": "house",
+   "label": "bad"
+  },
+  "ab8km:new:slu:house": {
+   "n": 446,
+   "shape": "house",
+   "label": "bad"
+  },
+  "ab8km:new:fremont:cross": {
+   "n": 447,
+   "shape": "cross",
+   "label": "bad"
+  },
+  "ab8km:new:slu:star": {
+   "n": 448,
+   "shape": "star",
+   "label": "ok"
+  },
+  "ab8km:base:ballard:heart": {
+   "n": 449,
+   "shape": "heart",
+   "label": "good"
+  },
+  "ab8km:new:slu:lightning": {
+   "n": 450,
+   "shape": "lightning",
+   "label": "ok"
   }
  }
 }

@@ -7,7 +7,8 @@
 
   Usage:
     npm run eval
-    npm run eval -- --locations=grid,slu --shapes=pixel-heart,star --activity=ride --png
+    npm run eval -- --locations=grid,slu --shapes=heart,star --activity=ride --png
+    npm run eval -- --distance=8        # size shapes for an 8 km route, report distance error
 
   Output (eval/out/):
     report.json  metrics + config for every location × shape
@@ -28,6 +29,7 @@ import {
 
 const args = parseArgs(process.argv.slice(2));
 const activity = args.activity || "run";
+const targetDistance = args.distance ? Number(args.distance) * 1000 : null;
 const shapeFilter = args.shapes?.split(",");
 const templates = SHAPE_LIBRARY.filter((t) => !shapeFilter || shapeFilter.includes(t.key));
 
@@ -53,7 +55,7 @@ for (const loc of locations) {
 
   for (const template of templates) {
     const start = performance.now();
-    const [best] = quietly(() => fitShape(graph, template, loc.center, 1, { applyGate: false }));
+    const [best] = quietly(() => fitShape(graph, template, loc.center, 1, { applyGate: false, targetDistance }));
     const ms = Math.round(performance.now() - start);
 
     const row = { location: loc.key, shape: template.key, ms, found: !!best };
@@ -63,6 +65,7 @@ for (const loc of locations) {
         id: `${loc.key}:${template.key}:r${radius}:rot${rotation}:${center[0].toFixed(5)},${center[1].toFixed(5)}`,
         passesGate: passesQualityGate(best.metrics),
         distanceM: Math.round(best.distance),
+        distanceError: targetDistance ? +(best.distance / targetDistance - 1).toFixed(3) : null,
         config: best.config,
         metrics: roundAll(best.metrics),
         coords: best.coords,
@@ -84,7 +87,10 @@ for (const loc of locations) {
   const rows = results.filter((r) => r.location === loc.key);
   const passing = rows.filter((r) => r.passesGate).length;
   const ms = rows.reduce((s, r) => s + r.ms, 0);
-  console.log(`  ${loc.key.padEnd(12)} ${passing}/${rows.length} pass gate, fitting ${(ms / 1000).toFixed(1)}s`);
+  const onTarget = targetDistance
+    ? `, ${rows.filter((r) => r.found && Math.abs(r.distanceError) <= 0.15).length}/${rows.length} within ±15% of ${targetDistance / 1000} km`
+    : "";
+  console.log(`  ${loc.key.padEnd(12)} ${passing}/${rows.length} pass gate${onTarget}, fitting ${(ms / 1000).toFixed(1)}s`);
 }
 console.log(`  total ${totalSec}s`);
 
@@ -93,7 +99,7 @@ console.log(`  total ${totalSec}s`);
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(
   path.join(OUT_DIR, "report.json"),
-  JSON.stringify({ activity, createdAt: new Date().toISOString(), totalSec: +totalSec, results }, null, 1)
+  JSON.stringify({ activity, targetDistance, createdAt: new Date().toISOString(), totalSec: +totalSec, results }, null, 1)
 );
 const sheetPath = path.join(OUT_DIR, "sheet.html");
 const sheet = renderSheet(locations, results, templates);
