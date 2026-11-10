@@ -262,7 +262,6 @@ export default function RouteMap({ route, loading, previewRoutes = [], startPoin
       {!route && !loading && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
-            <div className="text-white/15 text-base font-mono">Seattle</div>
             <div className="text-white/7 text-xs font-mono mt-2">Tap the map to choose where you start</div>
           </div>
         </div>
